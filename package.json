@@ -1,0 +1,33 @@
+{
+  "name": "meteor-package-json",
+  "version": "1.0.0",
+  "description": "Useful funcs for working with package.json in Meteor",
+  "main": "package-json.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register package-json-tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gadicc/meteor-package-json.git"
+  },
+  "keywords": [
+    "meteor",
+    "package.json"
+  ],
+  "author": "Gadi Cohen <dragon@wastelands.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gadicc/meteor-package-json/issues"
+  },
+  "homepage": "https://github.com/gadicc/meteor-package-json#readme",
+  "devDependencies": {
+    "babel-core": "^6.8.0",
+    "babel-eslint": "^6.0.4",
+    "babel-preset-meteor": "^6.6.8",
+    "chai": "^3.5.0",
+    "eslint": "^2.8.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.4",
+    "underscore": "^1.8.3"
+  }
+}
