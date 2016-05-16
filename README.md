@@ -47,6 +47,7 @@ if (config.experimental)
 
   * Returns the `sectionName` property from `package.json`.
   * If the properties in `sectionName` have *changed* (are not deeply equal), then, Meteor will quite if no `acceptHandler` is given, or if `acceptHandler(prevSection, newSection)` does not return `true`.
+  * For both the initial return and acceptHandler, if the section is undefined, an empty object (` {} `) will be returned, so no need to test for this in your   code.
 
 ## Development && testing
 

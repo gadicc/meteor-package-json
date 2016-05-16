@@ -46,7 +46,7 @@ var onFileChange = function() {
     newConfig = newlyParsed[name];
     if (JSON.stringify(oldConfig) !== JSON.stringify(newConfig)
         && (sectionChangeCallbacks[name] === false ||
-          !sectionChangeCallbacks[name](oldConfig, newConfig))) {
+          !sectionChangeCallbacks[name]( oldConfig||{}, newConfig||{} ))) {
       sectionFails.push(name);
     }
   }
@@ -75,7 +75,7 @@ packageJson = {
 
   getPackageConfig: function(name, listener) {
     sectionChangeCallbacks[name] = listener || false;
-    return packageJsonParsed[name];    
+    return packageJsonParsed[name] || {};
   },
 
   getEntireConfig: function(name, listener) {

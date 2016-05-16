@@ -70,7 +70,7 @@ describe('package-json', () => {
     exposed.setInitial({ test: { a: 1 } });
 
     var message;
-    exposed.setExit((msg) => { message = msg; return false; });
+    exposed.setExit(msg => message = msg);
     packageJson.getPackageConfig('test');
 
     exposed.updateWith({ test: { a: 1 }, unrelated: 2 });
@@ -79,6 +79,25 @@ describe('package-json', () => {
     exposed.updateWith({ test: { a: 2 } });
     expect(message).to.not.be.undefined;
     expect(message).to.equal("Your package.json was updated and changes to the following sections could not be accepted: test\nPlease restart Meteor");
+  });
+
+  it('passes {} for undefined section', () => {
+    var prev, next, nextConfig = { test: { a: 1 } };
+    exposed.setInitial({});
+
+    var test = packageJson.getPackageConfig('test', (_prev, _next) => {
+      prev = _prev; next = _next; return true;
+    });
+
+    // test section undefined, so should return {}
+    expect(test).to.deep.equal({});
+
+    exposed.updateWith(nextConfig);
+    expect(prev).to.deep.equal({});
+    expect(next).to.equal(nextConfig.test);
+
+    exposed.updateWith({});
+    expect(next).to.deep.equal({});
   });
 
 });
