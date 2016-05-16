@@ -1,5 +1,10 @@
 var testMode = global._PACKAGE_JSON_TEST_MODE;
 
+var nowatch =
+  process.env.NODE_ENV === 'production'
+  || process.argv.indexOf('test') !== -1
+  || process.argv.indexOf('test-packages') !== -1;
+
 var fs, path, _, PathWatcher, MFH;
 if (testMode) {
   _ = require('underscore');
@@ -11,10 +16,19 @@ if (testMode) {
   path = Npm.require('path');
   _ = Npm.require('underscore');
   MFH = MeteorFilesHelpers;
-  PathWatcher = Npm.require(path.join(
-    MFH.getMeteorToolPath(),
-    'dev_bundle', 'lib', 'node_modules', 'pathwatcher'
-  ));
+
+  if (!nowatch) {
+    try {
+      // build plugin
+      PathWatcher = Npm.require('pathwatcher');
+    } catch (err) {
+      // server package
+      PathWatcher = Npm.require(path.join(
+        MFH.getMeteorToolPath(),
+        'dev_bundle', 'lib', 'node_modules', 'pathwatcher'
+      ));
+    }
+  }
 }
 
 //if (process.env.APP_ID)
@@ -33,11 +47,24 @@ var projRoot = MFH.getAppPath();
 var packageJsonPath = path.join(projRoot, 'package.json');
 
 var packageJsonParsed;
-if (!testMode)
-  packageJsonParsed = fetch();
+if (!testMode) {
+  try {
+    packageJsonParsed = fetch();
+  } catch (err) {
+    console.log(err);
+    process.exit();
+  }
+}
 
 var onFileChange = function() {
-  var newlyParsed = fetch();
+  var newlyParsed;
+  try {
+    newlyParsed = fetch();
+  } catch (err) {
+    console.log(err);
+    // Don't exit.  Don't send changes until the file is valid.
+    return;
+  }
 
   var sectionFails = [];
   var name, oldConfig, newConfig;
@@ -60,7 +87,7 @@ var onFileChange = function() {
   packageJsonParsed = newlyParsed;
 };
 
-if (!testMode)
+if (!testMode && !nowatch)
   PathWatcher.watch(packageJsonPath, _.debounce(onFileChange, 5));
 
 var sectionChangeCallbacks = {};

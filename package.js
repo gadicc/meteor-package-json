@@ -2,7 +2,7 @@
 
 Package.describe({
   name: 'gadicc:package-json',
-  version: '1.0.1',
+  version: '1.0.2',
   summary: 'Get/watch package.json for package authors',
   git: 'https://github.com/gadicc/meteor-package-json',
   documentation: 'README.md'
