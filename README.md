@@ -1,7 +1,6 @@
 # meteor-package-json
 
-A helper for Meteor package authors who need info from the apps `package.json`.  Watches the file and has a callback for your package to accept changes to it's
-relevant section, otherwise quits Meteor asking for the user to reboot.
+A helper for Meteor package authors who need info from the apps `package.json`.  Watches the file and has a callback for your package to accept changes to it's relevant section, otherwise quits Meteor asking for the user to restart.
 
 ## Quick Start
 
@@ -19,26 +18,27 @@ For the examples below, assume we are developing `john:doe` and have the followi
 
 ```js
 const config = packageJson.getPackageConfig('john:doe');
-expect(config).to.deep.equal({ "experimental: true "});
+expect(config).to.deep.equal({ experimental: true });
 ```
 
-If the `john:doe` section is modified, Meteor will exit.  If any other part of the file is modified, nothing happens.
+If the `john:doe` section is modified, Meteor will exit.  If any other part of the file is modified, nothing happens.  But it's even better if you can accept the changes to avoid a restart.
 
 **Accepting Changes**
 
 ```js
+// The callback below is only ever called if prev does not deep equal next
 const config = packageJson.getPackageConfig('john:doe', (prev, next) => {
-  // prev !== next, guaranteed, else the function isn't called
-  if (prev.experimental !== next.experiemnetal && next.experimental)
-    enableExperimentalFeatures();
+  if (prev.experimental !== next.experiemnetal) {
+    enableExperimentalFeatures(next.experimental);
+  }
 
-  // We could accept this change; no need to restart Meteor.
+  // We can accept this change; no need to restart Meteor.
   return true;
 });
 
 // On initial load
 if (config.experimental)
-  enableExperimentalFeatures();
+  enableExperimentalFeatures(true);
 ```
 
 ## API
