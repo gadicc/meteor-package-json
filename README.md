@@ -1,6 +1,6 @@
 # meteor-package-json
 
-A helper for Meteor package authors who need info from the apps `package.json`.  Watches the file and has a callback for your package to accept changes to it's relevant section, otherwise quits Meteor asking for the user to restart.
+A helper for Meteor **build plugin** authors (for now) who need info from the apps `package.json`.  Watches the file and has a callback for your package to accept changes to it's relevant section, otherwise quits Meteor asking for the user to restart.
 
 ## Quick Start
 

@@ -1,3 +1,6 @@
+if (process.env.APP_ID)
+  return;
+
 var testMode = global._PACKAGE_JSON_TEST_MODE;
 
 var meteorIsTest = typeof Meteor === 'object' && Meteor.isTest;
@@ -34,9 +37,6 @@ if (testMode) {
   }
 }
 
-//if (process.env.APP_ID)
-//  return;
-
 var fetch = function() {
   return JSON.parse(fs.readFileSync(packageJsonPath));
 };
@@ -56,18 +56,23 @@ if (!testMode) {
   try {
     if (packageJsonPath)
       packageJsonParsed = fetch();
-//    else
-//      this doesn't work unfortunately
-//      packageJsonParsed = require('/package.json');
-      else {
-        if (meteorIsTest)
-          console.log('[gadicc:package-json] In test mode, packageJson '
-            + 'returns {} for all packages, it\'s unavoidable currently.')
-        else
+    else {
+      if (meteorIsTest) {
+        console.log('[gadicc:package-json] In test mode, packageJson '
+          + 'returns {} for all packages, it\'s unavoidable currently.');
+        packageJsonParsed = {};
+      } else {
+        try {
+          packageJsonParsed = require('/package.json');
+        } catch (err) {
+          console.log('aid', process.env.APP_ID);
+          console.log(err);
           console.log('[gadicc:package-json] Something went wrong!!! '
             + 'Can\'t find project dir, returning {} for all packages.');
-        packageJsonParsed = {};    
+          packageJsonParsed = {};
+        }
       }
+    }
   } catch (err) {
     console.log(err);
     process.exit();

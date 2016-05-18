@@ -1,5 +1,7 @@
-gadicc:package-json@1.0.3
+gadicc:package-json@1.0.4
 meteor@1.1.14
+modules@0.6.1
+modules-runtime@0.6.3
 package-version-parser@3.0.8
 sanjo:meteor-files-helpers@1.2.0_1
 sanjo:meteor-version@1.0.0
